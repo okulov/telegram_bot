@@ -15,6 +15,13 @@ async def bot_file(message=types.Message):
     name = message.document.file_name
     await message.answer(f'Передан файл с именем: {name}')
 
+    if not os.path.exists('download'):
+        os.mkdir('download')
+    if not os.path.exists('download/input'):
+        os.mkdir('download/input')
+    if not os.path.exists('download/output'):
+        os.mkdir('download/output')
+
     path_out = os.path.join(os.getcwd(), 'download\output')
     file_out = os.path.join(path_out, ''.join(['payments_',str(datetime.now().date()),'.xls']))
     path_in = os.path.join(os.getcwd(), 'download\input')

@@ -130,5 +130,7 @@ dmypy.json
 .idea/*
 .env
 
-/download/output/
-/download/input/
+.xlsx
+.csv
+.xls
+

@@ -1,8 +1,4 @@
 import csv
-import glob
-import os
-import sys
-
 import xlwt
 from pip._vendor import chardet
 

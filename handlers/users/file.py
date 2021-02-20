@@ -26,7 +26,7 @@ async def bot_file(message=types.Message):
     file_out = os.path.join(path_out, ''.join(['payments_',str(datetime.now().date()),'.xls']))
     path_in = os.path.join(os.getcwd(), 'download\input')
     file_in = os.path.join(path_in, name)
-
+    await message.answer(f'Директория файла: {file_in}')
     await bot.download_file(fi, destination=file_in)
 
 

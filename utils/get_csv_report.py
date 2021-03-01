@@ -1,9 +1,44 @@
 import csv
+import os
+
 import xlwt
 from pip._vendor import chardet
 
 
 # pyinstaller --onedir --onefile --name=take_payments "main.py"
+
+def get_mounth(dict, params):
+    actual_mounth = set()
+    for client in dict[1:2]:
+        for field, value in client.items():
+            for mounth in params.get('mounths'):
+                if mounth in field.split() and (
+                        set(params.get('years')).intersection(field.split()) != set()) and params.get(
+                    'goal') in field.split():
+                    actual_mounth.add(str(mounth))
+
+    a_mounth = []
+    for m in params.get('mounths'):
+        if m in actual_mounth:
+            a_mounth.append(m)
+
+    act_mounth = {}
+    for client in dict[1:2]:
+        for year in params.get('years'):
+            act_mounth[year] = set()
+            for field, value in client.items():
+                for mounth in params.get('mounths'):
+                    if mounth in field.split() and (year in field.split()) and params.get('goal') in field.split():
+                        act_mounth[year].add(str(mounth))
+
+        year_mounths = {}
+    for y, m in act_mounth.items():
+        year_mounths[y] = []
+        for month in params.get('mounths'):
+            if month in m:
+                year_mounths[y].append(month)
+    return year_mounths
+
 
 def read_csv(file: str) -> list:
     dict = []
@@ -266,7 +301,7 @@ def save_xls(list_clients, file_out):
             # else:
             # ws.col(y).width = other_col
             ws.write(x, y, v, style_for_content)
-            ws.col(x).set_style(tall_style)
+            #ws.col(y).set_style(tall_style)
             y += 1
         x += 1
 
@@ -274,7 +309,7 @@ def save_xls(list_clients, file_out):
     print(f'Файл xls сохранен в той же папке, что и исходный файл, под именем: {name_file}')
 
 
-def get_report(file_name: str, file_out: str):
+def get_report(data_in, file_out: str, debug=False, method='file'):
     # mask = 'amocrm_export_leads*.csv'
     # try:
     #     file = glob.glob(mask, recursive=True)[0]
@@ -285,7 +320,12 @@ def get_report(file_name: str, file_out: str):
     #     print('CSV-файл должен лежать в директории:', os.path.abspath(os.curdir))
     #     sys.exit()
 
-    file = file_name
+    if method == 'file':
+        file = data_in
+        dict = read_csv(file)
+    elif method == 'dict':
+        dict = data_in
+
     params = {
         'mounths': ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь',
                     'ноябрь', 'декабрь'],
@@ -299,45 +339,13 @@ def get_report(file_name: str, file_out: str):
         'name_for_client': 'Название сделки',
         'name_id': 'ID',
     }
-    test = False
-    a = 76
-    b = 79
-
-    dict = read_csv(file)
+    test = debug
+    a = 14
+    b = 16
     if test:
         print(dict[1:2])
 
-    actual_mounth = set()
-    for client in dict[1:2]:
-        for field, value in client.items():
-            for mounth in params.get('mounths'):
-                if mounth in field.split() and (
-                        set(params.get('years')).intersection(field.split()) != set()) and params.get(
-                    'goal') in field.split():
-                    actual_mounth.add(str(mounth))
-
-    a_mounth = []
-    for m in params.get('mounths'):
-        if m in actual_mounth:
-            a_mounth.append(m)
-
-    act_mounth = {}
-    for client in dict[1:2]:
-        for year in params.get('years'):
-            act_mounth[year] = set()
-            for field, value in client.items():
-                for mounth in params.get('mounths'):
-                    if mounth in field.split() and (year in field.split()) and params.get('goal') in field.split():
-                        act_mounth[year].add(str(mounth))
-
-        year_mounths = {}
-    for y, m in act_mounth.items():
-        year_mounths[y] = []
-        for month in params.get('mounths'):
-            if month in m:
-                year_mounths[y].append(month)
-
-    params['year_mounths'] = year_mounths
+    params['year_mounths'] = get_mounth(dict, params)
 
     # dict = dict[0:5]
 
@@ -371,3 +379,9 @@ def get_report(file_name: str, file_out: str):
     save_xls(list_final, file_out)
 
     return (x)
+
+
+if __name__ == '__main__':
+    file_in = 'amocrm_export_leads_2021-02-13.csv'
+    file_out = 'payments_2021-02-20.xls'
+    get_report(file_in, file_out)

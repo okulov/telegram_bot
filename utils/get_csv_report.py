@@ -1,5 +1,4 @@
 import csv
-import os
 
 import xlwt
 from pip._vendor import chardet
@@ -301,7 +300,7 @@ def save_xls(list_clients, file_out):
             # else:
             # ws.col(y).width = other_col
             ws.write(x, y, v, style_for_content)
-            #ws.col(y).set_style(tall_style)
+            # ws.col(y).set_style(tall_style)
             y += 1
         x += 1
 

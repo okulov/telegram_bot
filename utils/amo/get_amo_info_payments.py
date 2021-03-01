@@ -1,9 +1,10 @@
 import datetime
-from amocrm.v2 import tokens, Lead as _Lead
+
+from amocrm.v2 import Lead as _Lead
 from amocrm.v2.entity import custom_field
 from amocrm.v2.filters import MultiFilter
 
-from .connect_to_amo import connect
+from . import connect
 from .. import get_csv_report
 
 
@@ -51,7 +52,7 @@ class Lead(_Lead):
     for field in name_fields:
         i += 1
         name_str = f'var{i}'
-        if 'Дата' in field:
+        if 'дата' in field.lower().split():
             setattr(_Lead, name_str, custom_field.DateCustomField(field))
         else:
             setattr(_Lead, name_str, custom_field.TextCustomField(field))

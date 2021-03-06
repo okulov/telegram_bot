@@ -12,7 +12,7 @@ filials = InlineKeyboardMarkup(row_width=3,
                                            callback_data='Рига'
                                        ),
                                        InlineKeyboardButton(
-                                           text='Оба филиала',
+                                           text='Оба',
                                            callback_data='all'
                                        )
                                    ]

@@ -1,10 +1,11 @@
 import datetime
-from amocrm.v2 import tokens, Lead as _Lead
+
+from amocrm.v2 import Lead as _Lead
 from amocrm.v2.entity import custom_field
 from amocrm.v2.filters import MultiFilter
 
-from .connect_to_amo import connect
-from .. import get_csv_report
+from . import connect
+from .. import get_report
 
 
 def make_names_fields():
@@ -51,7 +52,7 @@ class Lead(_Lead):
     for field in name_fields:
         i += 1
         name_str = f'var{i}'
-        if 'Дата' in field:
+        if 'дата' in field.lower().split():
             setattr(_Lead, name_str, custom_field.DateCustomField(field))
         else:
             setattr(_Lead, name_str, custom_field.TextCustomField(field))
@@ -63,7 +64,7 @@ class StatusFilter(MultiFilter):
         return {"filter[statuses][0][{}]".format(second_name): self._values}
 
 
-def get_report(filial, file_out):
+def get_amo_data(filial, file_out='', method_out='file'):
     id_pipeline = 1261522
     final_statuses_id = 142
     token = connect()
@@ -88,6 +89,6 @@ def get_report(filial, file_out):
                 lead[names_fields[i]] = datetime.datetime.strftime(lead[names_fields[i]], "%d.%m.%y")
         leads.append(lead)
 
-    get_csv_report.get_report(leads, file_out, debug=False, method='dict')
+    return get_report(leads, file_out, debug=False, method_in='dict', method_out=method_out)
 
-    return len(leads)
+

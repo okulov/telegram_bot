@@ -308,7 +308,7 @@ def save_xls(list_clients, file_out):
     print(f'Файл xls сохранен в той же папке, что и исходный файл, под именем: {name_file}')
 
 
-def get_report(data_in, file_out: str, debug=False, method='file'):
+def get_report(data_in, data_out: str, debug=False, method_in='file', method_out='file'):
     # mask = 'amocrm_export_leads*.csv'
     # try:
     #     file = glob.glob(mask, recursive=True)[0]
@@ -319,10 +319,10 @@ def get_report(data_in, file_out: str, debug=False, method='file'):
     #     print('CSV-файл должен лежать в директории:', os.path.abspath(os.curdir))
     #     sys.exit()
 
-    if method == 'file':
+    if method_in == 'file':
         file = data_in
         dict = read_csv(file)
-    elif method == 'dict':
+    elif method_in == 'dict':
         dict = data_in
 
     params = {
@@ -375,9 +375,12 @@ def get_report(data_in, file_out: str, debug=False, method='file'):
     if test:
         for i in list_final[a:b]:
             print(i)
-    save_xls(list_final, file_out)
 
-    return (x)
+    if method_out == 'file':
+        save_xls(list_final, data_out)
+        return len(x)
+    else:
+        return list_final
 
 
 if __name__ == '__main__':

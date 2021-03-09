@@ -25,7 +25,7 @@ async def change_main_buttons(message: types.Message):
 
 @dp.message_handler(text='Запрос по клиенту')
 async def request_lead_info(message: types.Message):
-    await message.answer(text='Введите ID сделки или ее наименование (имя клиента):', reply_markup=back)
+    await message.answer(text='Введите ID сделки или ее наименование (фамилия клиента):', reply_markup=back)
     await Lead_info.Wait_name_lead.set()
 
 

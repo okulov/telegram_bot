@@ -57,4 +57,7 @@ async def back_button(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Lead_info.Wait_name_lead)
 async def get_lead_info(message: types.Message):
     name_lead = message.text
-    await message.answer(get_amo_data(filial='', islead=name_lead, method_out='dict'))
+    if len(name_lead.split())>1:
+        await message.answer('Введите ТОЛЬКО фамилию (одно слово) или ID клиента')
+    else:
+        await message.answer(get_amo_data(filial='', islead=name_lead, method_out='dict'))

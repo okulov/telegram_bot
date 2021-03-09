@@ -369,7 +369,7 @@ def get_report(data_in, data_out: str, debug=False, method_in='file', method_out
 
     if method_out == 'file':
         save_xls(list_final, data_out)
-        return len(x)
+        return len(set(x))
     else:
         return list_final
 

@@ -89,10 +89,11 @@ def get_amo_data(filial, islead='', file_out='', method_out='file'):
         lead = {}
         lead['ID'] = l.id
         lead['Название сделки'] = l.name
-        lead['Статус'] = l.status.name
-        lead['Бюджет'] = l.price
-        lead['Тэги'] = [t.name for t in l.tags]
-        lead['Ссылка'] = f'https://barcaacademy.amocrm.ru/leads/detail/{l.id}'
+        if islead:
+            lead['Статус'] = l.status.name
+            lead['Бюджет'] = l.price
+            lead['Тэги'] = [t.name for t in l.tags]
+            lead['Ссылка'] = f'https://barcaacademy.amocrm.ru/leads/detail/{l.id}'
         names_fields = make_names_fields()
         for i in range(len(names_fields)):
             var = f'var{i + 1}'
@@ -100,7 +101,7 @@ def get_amo_data(filial, islead='', file_out='', method_out='file'):
             if 'дата' in names_fields[i].lower().split() and lead[names_fields[i]] != '':
                 lead[names_fields[i]] = datetime.strftime(lead[names_fields[i]], "%d.%m.%y")
         leads.append(lead)
-        if k==11:
+        if k==11 and islead:
             return f'Слишком общий запрос (результатов более {len(list(leads_gen))}), уточните фамилию или ID.'
     if islead:
         return get_summary_lead_info(leads)

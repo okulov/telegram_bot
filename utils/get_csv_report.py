@@ -5,6 +5,8 @@ from pip._vendor import chardet
 
 
 # pyinstaller --onedir --onefile --name=take_payments "main.py"
+from data import config
+
 
 def get_mounth(dict, params):
     actual_mounth = set()
@@ -325,19 +327,8 @@ def get_report(data_in, data_out: str, debug=False, method_in='file', method_out
     elif method_in == 'dict':
         dict = data_in
 
-    params = {
-        'mounths': ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь',
-                    'ноябрь', 'декабрь'],
-        'years': ['2020', '2021'],
-        'goal': 'факт',
-        'plan': 'план',
-        'data_str': 'дата',
-        'name_for_pay': 'Оплата',
-        'name_for_plan': 'План',
-        'name_for_debt': 'Задолженность',
-        'name_for_client': 'Название сделки',
-        'name_id': 'ID',
-    }
+    params = config.PARAMS_AMO
+
     test = debug
     a = 14
     b = 16

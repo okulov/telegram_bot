@@ -1,8 +1,9 @@
 from aiogram import types
 
-from keyboards.default import menu, info_payments
-from keyboards.inline.filials_buttons import filials
+from keyboards.default import menu, info_payments, back
+from keyboards.inline import filials
 from loader import dp
+from states import Lead_info
 
 
 @dp.message_handler(text='Выгрузить из AMO')
@@ -23,8 +24,10 @@ async def change_main_buttons(message: types.Message):
         reply_markup=info_payments)
 
 @dp.message_handler(text='Запрос по клиенту')
-async def change_main_buttons(message: types.Message):
-    await message.answer(text='Извините, функционал пока в разработке')
+async def request_lead_info(message: types.Message):
+    await message.answer(text='Введите ID сделки или ее наименование (имя клиента):', reply_markup=back)
+    await Lead_info.Wait_name_lead.set()
+
 
 
 

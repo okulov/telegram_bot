@@ -145,7 +145,17 @@ pipeline = Pipeline.objects.get(id_pipeline)
 
 # print([(s.id, s.name) for s in pipeline.statuses])
 #leads_gen = Lead.objects.get('9991369')
-leads_gen = Lead.objects.filter(filters=(f4, f2,), query = '')
+#leads_gen = Lead.objects.filter(filters=(f4, f2,), query = '')
+leads_gen = Lead.objects.filter(filters=(), query = 'Поплавская')
+for l in leads_gen:
+    print(l.status.name)
+    print(l.price)
+    tags = l.tags
+    print(*[t.name for t in tags])
+    print(l.name)
+    link = f'https://barcaacademy.amocrm.ru/leads/detail/{l.id}'
+    print(link)
+
 leads = []
 for l in leads_gen:
     lead = {}
@@ -159,6 +169,7 @@ for l in leads_gen:
             lead[names_fields[i]] = datetime.datetime.strftime(lead[names_fields[i]], "%d.%m.%y")
     leads.append(lead)
 print(len(leads))
+print(leads)
 #get_report(leads, 'payments.xls',debug=False, method='dict')
 
 # print(list(leads.tags))

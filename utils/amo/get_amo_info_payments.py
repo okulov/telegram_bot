@@ -1,10 +1,11 @@
-import datetime
+from datetime import datetime
 
 from amocrm.v2 import Lead as _Lead
 from amocrm.v2.entity import custom_field
 from amocrm.v2.filters import MultiFilter
 
 from . import connect
+from .get_summary import get_summary_lead_info
 from .. import get_report
 
 
@@ -64,7 +65,7 @@ class StatusFilter(MultiFilter):
         return {"filter[statuses][0][{}]".format(second_name): self._values}
 
 
-def get_amo_data(filial, file_out='', method_out='file'):
+def get_amo_data(filial, islead='', file_out='', method_out='file'):
     id_pipeline = 1261522
     final_statuses_id = 142
     token = connect()
@@ -72,23 +73,30 @@ def get_amo_data(filial, file_out='', method_out='file'):
     f1(final_statuses_id)
     f2 = StatusFilter('pipeline_id')
     f2(id_pipeline)
-    if filial != 'all':
+    if islead:
+        leads_gen = Lead.objects.filter(filters=(), query=islead)
+    elif filial != 'all':
         leads_gen = Lead.objects.filter(filters=(f2, f1,), query=filial)
     else:
         leads_gen = Lead.objects.filter(filters=(f2, f1,), query='')
+
     leads = []
     for l in leads_gen:
         lead = {}
         lead['ID'] = l.id
         lead['Название сделки'] = l.name
+        lead['Статус'] = l.status.name
+        lead['Бюджет'] = l.price
+        lead['Тэги'] = [t.name for t in l.tags]
+        lead['Ссылка'] = f'https://barcaacademy.amocrm.ru/leads/detail/{l.id}'
         names_fields = make_names_fields()
         for i in range(len(names_fields)):
             var = f'var{i + 1}'
             lead[names_fields[i]] = getattr(l, var) if getattr(l, var) != None else ''
             if 'дата' in names_fields[i].lower().split() and lead[names_fields[i]] != '':
-                lead[names_fields[i]] = datetime.datetime.strftime(lead[names_fields[i]], "%d.%m.%y")
+                lead[names_fields[i]] = datetime.strftime(lead[names_fields[i]], "%d.%m.%y")
         leads.append(lead)
-
-    return get_report(leads, file_out, debug=False, method_in='dict', method_out=method_out)
-
-
+    if islead:
+        return get_summary_lead_info(leads)
+    else:
+        return get_report(leads, file_out, debug=False, method_in='dict', method_out=method_out)

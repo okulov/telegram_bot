@@ -2,7 +2,6 @@ import copy
 import locale
 from datetime import datetime
 from data import config
-from utils.get_csv_report import save_xls
 
 
 def amount_clients(data):
@@ -110,7 +109,7 @@ def select_mounth(data, type):
     return data_new
 
 
-def get_summary_info(data: dict, filial: str, type: str):
+def get_summary_info(data: list, filial: str, type: str):
     locale.setlocale(locale.LC_ALL, '')
 
     if type == 'Общая информация':
@@ -147,6 +146,20 @@ def get_summary_info(data: dict, filial: str, type: str):
     else:
         result = header + ''.join([f'{key}: {value}\n' for key, value in params_mounth.items()])
 
-    #save_xls(data, 'test_.xls')
+    return {'info': result, 'data': data}
 
-    return {'info':result, 'data':data}
+
+def get_summary_lead_info(data: list):
+    res = []
+    for lead in data:
+        lead_field = {
+            'ID': lead['ID'],
+            'Название сделки': lead['Название сделки'],
+            'Статус': lead['Статус'],
+            'Бюджет': lead['Бюджет'],
+            'Тэги': ', '.join(lead['Тэги']),
+            'Ссылка': lead['Ссылка']
+        }
+        result = ''.join([f'{key}:  {value}\n' for key, value in lead_field.items()])
+        res.append(result)
+    return '\n'.join(res)

@@ -6,11 +6,11 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, InputFile
 
 from keyboards.default import menu
-from keyboards.inline.filials_buttons import filials, report_xls
+from keyboards.inline import filials, report_xls
 from loader import dp, bot
-from states.amo_payments_info import Payment_type
+from states import Payment_type, Lead_info
+from utils import save_xls
 from utils.amo import get_amo_data, get_summary_info
-from utils.get_csv_report import save_xls
 
 
 @dp.message_handler(text=['Общая информация', 'Текущий месяц', 'Прошлый месяц'],
@@ -48,7 +48,13 @@ async def download_info_xls(call: CallbackQuery, state: FSMContext):
     await bot.send_document(call.message.chat.id, cat, caption=f'Отчет готов.')
 
 
-@dp.message_handler(text='Назад', state=[None, Payment_type.Type_info, Payment_type.Filial])
+@dp.message_handler(text='Назад', state=[None, Payment_type.Type_info, Payment_type.Filial, Lead_info.Wait_name_lead])
 async def back_button(message: types.Message, state: FSMContext):
     await state.finish()
     await message.answer(text='Выберите действие:', reply_markup=menu)
+
+
+@dp.message_handler(state=Lead_info.Wait_name_lead)
+async def get_lead_info(message: types.Message):
+    name_lead = message.text
+    await message.answer(get_amo_data(filial='', islead=name_lead, method_out='dict'))

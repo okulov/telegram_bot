@@ -10,3 +10,9 @@ menu = ReplyKeyboardMarkup(keyboard=[
 
     ]
 ], resize_keyboard=True)
+
+back = ReplyKeyboardMarkup(keyboard=[
+    [
+        KeyboardButton(text='Назад'),
+    ]
+], resize_keyboard=True)

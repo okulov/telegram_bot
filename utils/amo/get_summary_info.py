@@ -111,7 +111,7 @@ def select_mounth(data, type):
 
 
 def get_summary_info(data: dict, filial: str, type: str):
-    locale.setlocale(locale.LC_ALL, ('ru_RU', 'UTF-8'))
+    locale.setlocale(locale.LC_ALL, '')
 
     if type == 'Общая информация':
         type_str = ''

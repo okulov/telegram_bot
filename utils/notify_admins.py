@@ -12,3 +12,11 @@ async def on_startup_notify(dp: Dispatcher):
 
         except Exception as err:
             logging.exception(err)
+
+async def on_use_notify(dp: Dispatcher, user:str):
+    for admin in ADMINS:
+        try:
+            await dp.bot.send_message(admin, f"Бот Запущен пользователем: {user}")
+
+        except Exception as err:
+            logging.exception(err)

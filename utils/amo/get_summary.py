@@ -27,12 +27,11 @@ def dept(data):
         for key, value in lead.items():
             if 'задолженность' in key.lower().split() and value not in ['', ' ']:
                 dept += float(value)
-    return '{0:,}'.format(dept).replace(',', ' ')
+    return '{0:,}'.format(int(dept)).replace(',', ' ')
 
 
 def avo(data):
-    # return round(payments(data),0)
-    return '{0:,}'.format(round(payments(data), 0)).replace(',', ' ')
+    return '{0:,}'.format(int(payments(data))).replace(',', ' ')
 
 
 def ltv(data):
@@ -72,7 +71,7 @@ def plan_sum(data):
         for key, value in lead.items():
             if 'план' in key.lower().split() and str(value).isdigit():
                 plan += float(value)
-    return '{0:,}'.format(plan).replace(',', ' ')
+    return '{0:,}'.format(int(plan)).replace(',', ' ')
 
 
 def fact_sum(data):
@@ -81,7 +80,7 @@ def fact_sum(data):
         for key, value in lead.items():
             if 'оплата' in key.lower().split() and value not in ['', ' '] and 'дата' not in key.lower().split():
                 fact += float(str(value).replace(',', '.'))
-    return '{0:,}'.format(fact).replace(',', ' ')
+    return '{0:,}'.format(int(fact)).replace(',', ' ')
 
 
 def select_mounth(data, type):

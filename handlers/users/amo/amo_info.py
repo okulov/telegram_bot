@@ -40,10 +40,10 @@ async def get_payments_info(call: CallbackQuery, state: FSMContext):
 async def download_info_xls(call: CallbackQuery, state: FSMContext):
     path_out = os.path.join(os.getcwd(), 'download/output')
     data_state = await state.get_data()
-    file_out = os.path.join(path_out,
-                            ''.join(['Report_', data_state.get('filial'), '_', str(datetime.now()), '.xls']))
+    name_file = ''.join(['Report_', data_state.get('filial'), '_', datetime.now().strftime("%d_%m_%y_%H_%M"), '.xls'])
+    file_out = os.path.join(path_out, name_file)
+
     save_xls(data_state.get('info_xls'), file_out)
-    # amount_id = get_amo_data(call.data, file_out=file_out, method_out='file')
     cat = InputFile(file_out)
     await bot.send_document(call.message.chat.id, cat, caption=f'Отчет готов.')
 

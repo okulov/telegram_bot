@@ -2,7 +2,7 @@ from datetime import datetime
 
 from amocrm.v2 import Lead as _Lead
 from amocrm.v2.entity import custom_field
-from amocrm.v2.filters import MultiFilter
+from amocrm.v2.filters import MultiFilter, SingleFilter
 
 from . import connect
 from .get_summary import get_summary_lead_info
@@ -73,8 +73,10 @@ def get_amo_data(filial, islead='', file_out='', method_out='file'):
     f1(final_statuses_id)
     f2 = StatusFilter('pipeline_id')
     f2(id_pipeline)
+    f_pipe = SingleFilter('pipeline_id')
+    f_pipe(id_pipeline)
     if islead:
-        leads_gen = Lead.objects.filter(filters=(), query=islead)
+        leads_gen = Lead.objects.filter(filters=(f_pipe,), query=islead)
     elif filial != 'all':
         leads_gen = Lead.objects.filter(filters=(f2, f1,), query=filial)
     else:

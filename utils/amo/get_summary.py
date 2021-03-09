@@ -162,4 +162,4 @@ def get_summary_lead_info(data: list):
         }
         result = ''.join([f'{key}:  {value}\n' for key, value in lead_field.items()])
         res.append(result)
-    return '\n'.join(res)
+    return '\n'.join(res[::-1])

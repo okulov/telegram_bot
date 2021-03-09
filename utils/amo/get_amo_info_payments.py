@@ -83,7 +83,9 @@ def get_amo_data(filial, islead='', file_out='', method_out='file'):
         leads_gen = Lead.objects.filter(filters=(f2, f1,), query='')
 
     leads = []
+    k = 0
     for l in leads_gen:
+        k += 1
         lead = {}
         lead['ID'] = l.id
         lead['Название сделки'] = l.name
@@ -98,6 +100,8 @@ def get_amo_data(filial, islead='', file_out='', method_out='file'):
             if 'дата' in names_fields[i].lower().split() and lead[names_fields[i]] != '':
                 lead[names_fields[i]] = datetime.strftime(lead[names_fields[i]], "%d.%m.%y")
         leads.append(lead)
+        if k==11:
+            return f'Слишком общий запрос (результатов более {len(list(leads_gen))}), уточните фамилию или ID.'
     if islead:
         return get_summary_lead_info(leads)
     else:

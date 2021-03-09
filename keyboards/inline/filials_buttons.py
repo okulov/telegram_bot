@@ -17,3 +17,13 @@ filials = InlineKeyboardMarkup(row_width=3,
                                        )
                                    ]
                                ])
+
+report_xls = InlineKeyboardMarkup(row_width=1,
+                                  inline_keyboard=[
+                                      [
+                                          InlineKeyboardButton(
+                                                  text = 'Скачать отчет XLS',
+                                                  callback_data='download_xls'
+                                          )
+                                      ]
+                                  ])

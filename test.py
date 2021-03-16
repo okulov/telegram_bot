@@ -74,12 +74,12 @@ tokens.default_token_manager(
         redirect_url=redirect_url,
         storage=tokens.FileTokensStorage(),  # by default FileTokensStorage
 )
-tokens.default_token_manager.init(code=code, skip_error=False)
-# token_d = tokens.default_token_manager._storage.get_access_token()
-# token_data = jwt.decode(token_d, options={"verify_signature": False})
-# exp = datetime.datetime.utcfromtimestamp(int(token_data["exp"]))
-# print(exp)
-# tokens.default_token_manager.get_access_token()
+#tokens.default_token_manager.init(code=code, skip_error=False)
+token_d = tokens.default_token_manager._storage.get_access_token()
+token_data = jwt.decode(token_d, options={"verify_signature": False})
+exp = datetime.datetime.utcfromtimestamp(int(token_data["exp"]))
+print(exp)
+tokens.default_token_manager.get_access_token()
 
 
 
@@ -146,8 +146,8 @@ pipeline = Pipeline.objects.get(id_pipeline)
 # print([(s.id, s.name) for s in pipeline.statuses])
 #leads_gen = Lead.objects.get('9991369')
 #leads_gen = Lead.objects.filter(filters=(f4, f2,), query = '')
-leads_gen = Lead.objects.filter(filters=(), query = 'рига')
-print(len(list(leads_gen)))
+leads_gen = Lead.objects.filter(filters=(), query = '27912557')
+#print(len(list(leads_gen)))
 for l in leads_gen:
     print(l.status.name)
     print(l.price)

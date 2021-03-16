@@ -3,7 +3,6 @@ import csv
 import xlwt
 from pip._vendor import chardet
 
-
 # pyinstaller --onedir --onefile --name=take_payments "main.py"
 from data import config
 
@@ -107,8 +106,8 @@ def take_payments(dict: dict, params: dict) -> []:
     list = []
     client_info = {}
     for client in dict:
-        client_info[params.get('name_id')] = client[params.get('name_id')]
-        client_info[params.get('name_for_client')] = client[params.get('name_for_client')]
+        for field in config.BASE_FIELDS:
+            client_info[field] = client[field]
         client_info[params.get('name_for_pay')] = {}
         client_info['amount_payments'] = {}
         for year, mounths in params.get('year_mounths').items():
@@ -194,8 +193,8 @@ def take_final_list(list_clients, params: dict) -> []:
                 if client['amount_payments'][year][mounth] > num_rows:
                     num_rows = client['amount_payments'][year][mounth]
         for row in range(num_rows):
-            client_out[params.get('name_id')] = int(client[params.get('name_id')])
-            client_out[params.get('name_for_client')] = client[params.get('name_for_client')]
+            for field in config.BASE_FIELDS:
+                client_out[field] = client[field]
             for year, mounths in params.get('year_mounths').items():
                 for mounth in mounths:
                     name_coll_amount = ' '.join([params.get('name_for_pay'), mounth, year])

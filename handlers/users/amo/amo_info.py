@@ -38,6 +38,7 @@ async def get_payments_info(call: CallbackQuery, state: FSMContext):
 
 @dp.callback_query_handler(state=Payment_type.Filial)
 async def download_info_xls(call: CallbackQuery, state: FSMContext):
+    await bot.answer_callback_query(text='Формирую отчет...', callback_query_id=call.id)
     path_out = os.path.join(os.getcwd(), 'download/output')
     data_state = await state.get_data()
     name_file = ''.join(['Report_', data_state.get('filial'), '_', datetime.now().strftime("%d_%m_%y_%H_%M"), '.xls'])
@@ -57,7 +58,7 @@ async def back_button(message: types.Message, state: FSMContext):
 @dp.message_handler(state=Lead_info.Wait_name_lead)
 async def get_lead_info(message: types.Message):
     name_lead = message.text
-    if len(name_lead.split())>1:
+    if len(name_lead.split()) > 1:
         await message.answer('Введите ТОЛЬКО фамилию (одно слово) или ID клиента')
     else:
         await message.answer(get_amo_data(filial='', islead=name_lead, method_out='dict'))

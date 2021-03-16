@@ -97,7 +97,7 @@ def select_mounth(data, type):
         mounth = list_mounth[int(datetime.now().strftime('%m')) - 1]
         today_year = datetime.now().strftime('%Y')
 
-    base_fields = ['ID', 'Название сделки']
+    base_fields = config.BASE_FIELDS
     data_new = copy.deepcopy(data)
     for i, lead in enumerate(data):
         for key, value in lead.items():
@@ -107,6 +107,17 @@ def select_mounth(data, type):
                 del data_new[i][key]
     return data_new
 
+def clear_empty_str(data:list):
+    data_new = []
+    base_fields = config.BASE_FIELDS
+    for i, lead in enumerate(data):
+        empty_line = True
+        for key, value in lead.items():
+            if key not in base_fields and value not in ['', None]:
+                empty_line = False
+        if not empty_line:
+            data_new.append(data[i])
+    return data_new
 
 def get_summary_info(data: list, filial: str, type: str):
     locale.setlocale(locale.LC_ALL, '')
@@ -145,6 +156,7 @@ def get_summary_info(data: list, filial: str, type: str):
     else:
         result = header + ''.join([f'{key}: {value}\n' for key, value in params_mounth.items()])
 
+    data = clear_empty_str(data)
     return {'info': result, 'data': data}
 
 

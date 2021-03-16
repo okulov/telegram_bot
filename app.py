@@ -13,8 +13,7 @@ async def on_startup(dispatcher):
 if __name__ == '__main__':
     executor.start_polling(dp, on_startup=on_startup)
 
-# TODO:
-#  - переделать хранилище на Memory
+# TODO:#
 #  - выгрузка почт и телефонов контактов по филиалам и общее
 #  - добавление других доск на выбор
 #  - агрегация долга по клиенту

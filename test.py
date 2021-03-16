@@ -17,9 +17,10 @@ def make_names_fields():
 
 
 code = config.AMO_CODE
+
 redirect_url = 'https://barcaacademy.ru/'
-client_id = '80c88f56-1922-478c-9a03-fc8b3fd9a232'
-client_secret = '4jPrt8NO0pNrIpZppeoqDsDuOSRCLIAb5okd4qapHmPjfAMIXBWN2KzUzx8s0FIz'
+client_id = config.CONNECT_PARAMS['client_id']
+client_secret = config.CONNECT_PARAMS['client_secret']
 
 import redis
 from urllib.parse import urlparse

@@ -26,8 +26,8 @@ PARAMS_AMO = {
 AMO_CODE = env.str("AMO_CODE")
 CONNECT_PARAMS = {
     'redirect_url': 'https://barcaacademy.ru/',
-    'client_id': '80c88f56-1922-478c-9a03-fc8b3fd9a232',
-    'client_secret': '4jPrt8NO0pNrIpZppeoqDsDuOSRCLIAb5okd4qapHmPjfAMIXBWN2KzUzx8s0FIz',
+    'client_id': env.str("CLIENT_ID"),
+    'client_secret': env.str("CLIENT_SECRET"),
     'subdomain': "barcaacademy",
 }
 

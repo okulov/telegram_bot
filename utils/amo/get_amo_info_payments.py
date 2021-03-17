@@ -149,7 +149,12 @@ def get_amo_contacts_data(query=''):
                 for i in range(max(num_phone, num_email)):
                     out['ID'] = c.id
                     out['Имя контакта'] = c.name
+                    out['Статус'] = getattr(c, 'Статус')
                     out['Название школы'] = getattr(c, 'Название школы')
+                    out['Программа'] = getattr(c, 'Программа')
+                    out['ФИО ребенка'] = getattr(c, 'ФИО ребенка')
+                    out['Полных лет ребёнку'] = getattr(c, 'Полных лет ребёнку')
+                    out['Тренер'] = getattr(c, 'Тренер')
                     try:
                         out['Телефон'] = getattr(c, 'Телефон')[i].value if getattr(c, 'Телефон') else ''
                     except IndexError:

@@ -272,16 +272,19 @@ def save_xls(list_clients, file_out):
     tall_style = xlwt.easyxf('font:height 250;')
 
     wb = xlwt.Workbook()
-    ws = wb.add_sheet('payments')
+    ws = wb.add_sheet('Barça Academy')
     first_col = ws.col(1)
-    other_col = 256 * 35
-    first_col.width = 256 * 35  # 25 characters wide (-ish)
+    other_col = 256 * 16
+    main_col = 256 * 35
+    first_col.width = 256 * 45  # 25 characters wide (-ish)
     # first_row = ws.row(0)
 
     y = 0
     x = 0
     for header in list_clients[0].keys():
         if y == 1:
+            ws.col(y).width = main_col
+        else:
             ws.col(y).width = other_col
         ws.write(x, y, header, style1)
         y += 1

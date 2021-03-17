@@ -5,11 +5,12 @@ from data.config import USERS
 from keyboards.default import menu, info_payments, back, type_info
 from keyboards.inline import filials
 from loader import dp
-from states import Lead_info, Payment_type
+from states import Lead_info, Payment_type, Download_type
 
 
 @dp.message_handler(text='Выгрузить из AMO', chat_id=USERS)
 async def choise_tupe_information(message: types.Message):
+    await Download_type.begin.set()
     await message.answer(text='Какую информацию выгрузить?', reply_markup=type_info)
 
 

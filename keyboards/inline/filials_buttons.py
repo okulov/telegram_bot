@@ -27,3 +27,27 @@ report_xls = InlineKeyboardMarkup(row_width=1,
                                           )
                                       ]
                                   ])
+
+filials_ext = InlineKeyboardMarkup(row_width=3,
+                               inline_keyboard=[
+                                   [
+                                       InlineKeyboardButton(
+                                           text='Ходынка',
+                                           callback_data='Ходынка'
+                                       ),
+                                       InlineKeyboardButton(
+                                           text='Рига',
+                                           callback_data='Новая Рига'
+                                       ),
+                                       InlineKeyboardButton(
+                                           text='Оба',
+                                           callback_data='all'
+                                       )
+                                   ],
+                                   [
+                                        InlineKeyboardButton(
+                                           text='Все контакты',
+                                           callback_data='all_leads'
+                                       )
+                                   ]
+                               ])

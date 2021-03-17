@@ -10,7 +10,7 @@ from keyboards.inline import filials, report_xls
 from loader import dp, bot
 from states import Payment_type, Lead_info
 from utils import save_xls
-from utils.amo import get_amo_data, get_summary_info
+from utils.amo import get_amo_payments_data, get_summary_info
 
 
 @dp.message_handler(text=['Общая информация', 'Текущий месяц', 'Прошлый месяц'],
@@ -28,7 +28,7 @@ async def get_payments_info(call: CallbackQuery, state: FSMContext):
     type_info = data_state.get('type_info')
     filial = call.data
 
-    data_amo = get_amo_data(filial, method_out='dict')
+    data_amo = get_amo_payments_data(filial, method_out='dict')
     data_payments = get_summary_info(data_amo, filial=filial, type=type_info)
     await Payment_type.Filial.set()
     await state.update_data(info_xls=data_payments.get('data'))
@@ -61,4 +61,4 @@ async def get_lead_info(message: types.Message):
     if len(name_lead.split()) > 1:
         await message.answer('Введите ТОЛЬКО фамилию (одно слово) или ID клиента')
     else:
-        await message.answer(get_amo_data(filial='', islead=name_lead, method_out='dict'))
+        await message.answer(get_amo_payments_data(filial='', islead=name_lead, method_out='dict'))

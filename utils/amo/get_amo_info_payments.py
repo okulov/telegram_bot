@@ -1,8 +1,9 @@
 from datetime import datetime
 
 from amocrm.v2 import Lead as _Lead
+from amocrm.v2 import Contact as _Contact
 from amocrm.v2.entity import custom_field
-from amocrm.v2.filters import MultiFilter, SingleFilter
+from amocrm.v2.filters import MultiFilter, SingleFilter, Filter
 
 from data import config
 from . import connect
@@ -26,13 +27,34 @@ class Lead(_Lead):
         setattr(_Lead, field, custom_field.TextCustomField(field))
 
 
+class Contact(_Contact):
+    custom_fields = config.CONTACTS_FIELDS
+    for field in custom_fields:
+        if field in ['Телефон', 'Email']:
+            setattr(_Contact, field, custom_field.MultiSelectCustomField(field))
+        else:
+            setattr(_Contact, field, custom_field.TextCustomField(field))
+
+
 class StatusFilter(MultiFilter):
     def _as_params(self):
         second_name = 'status_id' if self._name == 'statuses' else self._name
         return {"filter[statuses][0][{}]".format(second_name): self._values}
 
 
-def get_amo_data(filial, islead='', file_out='', method_out='file'):
+# ?filter[custom_fields_values][{field_id}][] = {enum_id2}
+
+
+class CustomFieldsFilter(Filter):
+    def __call__(self, value):
+        self._field_id = self._name
+        self._enum_id = value
+
+    def _as_params(self):
+        return {"filter[custom_fields_values][{}][]".format(self._field_id): self._enum_id}
+
+
+def get_amo_payments_data(filial, islead='', file_out='', method_out='file'):
     id_pipeline = 1261522
     final_statuses_id = 142
     token = connect()
@@ -80,3 +102,65 @@ def get_amo_data(filial, islead='', file_out='', method_out='file'):
         return get_summary_lead_info(leads)
     else:
         return get_report(leads, file_out, debug=False, method_in='dict', method_out=method_out)
+
+
+def get_amo_contacts_data(query=''):
+    id_pipeline = 1261522
+    final_statuses_id = 142
+    token = connect()
+    f1 = StatusFilter('statuses')
+    f1(final_statuses_id)
+    f2 = StatusFilter('pipeline_id')
+    f2(id_pipeline)
+    f_pipe = SingleFilter('pipeline_id')
+    f_pipe(id_pipeline)
+    id_name_school_filed = 388253
+    f_contact = CustomFieldsFilter(id_name_school_filed)
+    if query == 'Новая Рига':
+        f_contact(754847)
+    elif query == 'Ходынка':
+        f_contact(754845)
+
+    leads_gen = [Contact.objects.filter()]
+
+    if query == "all_leads":
+        #leads_gen = [Contact.objects.filter()]
+        is_all = True
+    elif query != 'all':
+        #leads_gen = [Contact.objects.filter(query=query)]
+        filials =[query]
+        is_all = False
+    else:
+        # f_contact(754847)
+        # leads_gen1 = Contact.objects.filter(query='Новая Рига')
+        # f_contact(754845)
+        # leads_gen2 = Contact.objects.filter(query='Ходынка')
+        # leads_gen = [leads_gen1, leads_gen2]
+        filials = ['Новая Рига', 'Ходынка']
+        is_all = False
+
+    result = []
+    for lead in leads_gen:
+        for c in lead:
+            out = {}
+            if getattr(c, 'Тип') in ['Родитель', None]:
+                num_phone = len(getattr(c, 'Телефон')) if getattr(c, 'Телефон') else 0
+                num_email = len(getattr(c, 'Email')) if getattr(c, 'Email') else 0
+                for i in range(max(num_phone, num_email)):
+                    out['ID'] = c.id
+                    out['Имя контакта'] = c.name
+                    out['Название школы'] = getattr(c, 'Название школы')
+                    try:
+                        out['Телефон'] = getattr(c, 'Телефон')[i].value if getattr(c, 'Телефон') else ''
+                    except IndexError:
+                        out['Телефон'] = ''
+                    try:
+                        out['Email'] = getattr(c, 'Email')[i].value if getattr(c, 'Email') else ''
+                    except:
+                        out['Email'] = ''
+                    if not is_all:
+                        if out['Название школы'] in filials:
+                            result.append(out.copy())
+                    else:
+                        result.append(out.copy())
+    return result

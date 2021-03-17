@@ -32,6 +32,7 @@ CONNECT_PARAMS = {
 }
 
 MAIN_FIELDS = [PARAMS_AMO['name_id'], PARAMS_AMO['name_for_client']]
+CONTACTS_FIELDS = ['Телефон', 'Email', 'Тип', 'Название школы']
 OTHER_FIELDS = ['Школа', 'Уровень']
 LEAD_CUSTOM_FIELDS = []
 BASE_FIELDS = MAIN_FIELDS + LEAD_CUSTOM_FIELDS

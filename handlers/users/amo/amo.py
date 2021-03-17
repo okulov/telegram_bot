@@ -1,14 +1,14 @@
 from aiogram import types
 
-from keyboards.default import menu, info_payments, back
+from keyboards.default import menu, info_payments, back, type_info
 from keyboards.inline import filials
 from loader import dp
 from states import Lead_info
 
 
 @dp.message_handler(text='Выгрузить из AMO')
-async def choise_filials(message: types.Message):
-    await message.answer(text='Выберите филиал или сразу оба:', reply_markup=filials)
+async def choise_tupe_information(message: types.Message):
+    await message.answer(text='Какую информацию выгрузить?', reply_markup=type_info)
 
 
 @dp.message_handler(text='Обработать файл')

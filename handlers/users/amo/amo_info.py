@@ -1,10 +1,12 @@
 import os
 from datetime import datetime
+from aiogram.dispatcher import filters
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.types import CallbackQuery, InputFile
 
+from data.config import USERS
 from keyboards.default import menu
 from keyboards.inline import filials, report_xls
 from loader import dp, bot
@@ -14,14 +16,14 @@ from utils.amo import get_amo_payments_data, get_summary_info
 
 
 @dp.message_handler(text=['Общая информация', 'Текущий месяц', 'Прошлый месяц'],
-                    state=[None, Payment_type.Type_info, Payment_type.Filial])
+                    state=[Payment_type.Begin, Payment_type.Type_info, Payment_type.Filial])
 async def choice_type_info(message: types.Message, state: FSMContext):
     await Payment_type.Type_info.set()
     await state.update_data(type_info=message.text)
     await message.answer(text='Выберите филиал или сразу оба:', reply_markup=filials)
 
 
-@dp.callback_query_handler(state=Payment_type.Type_info)
+@dp.callback_query_handler(state=[Payment_type.Type_info])
 async def get_payments_info(call: CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(text='Идет запрос информации...', callback_query_id=call.id)
     data_state = await state.get_data()
@@ -36,7 +38,7 @@ async def get_payments_info(call: CallbackQuery, state: FSMContext):
     await call.message.answer(data_payments.get('info'), reply_markup=report_xls)
 
 
-@dp.callback_query_handler(state=Payment_type.Filial)
+@dp.callback_query_handler(filters.Regexp(regexp=r'download_xls'), state=Payment_type.Filial)
 async def download_info_xls(call: CallbackQuery, state: FSMContext):
     await bot.answer_callback_query(text='Формирую отчет...', callback_query_id=call.id)
     path_out = os.path.join(os.getcwd(), 'download/output')

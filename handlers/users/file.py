@@ -3,11 +3,12 @@ import os
 
 from aiogram import types
 
+from data.config import USERS
 from loader import dp, bot
 from aiogram.types import InputFile
 from utils.get_csv_report import get_report
 
-@dp.message_handler(content_types=types.ContentTypes.DOCUMENT)
+@dp.message_handler(content_types=types.ContentTypes.DOCUMENT, chat_id=USERS)
 async def bot_file(message=types.Message):
     document_id = message.document.file_id
     file_info = await bot.get_file(document_id)

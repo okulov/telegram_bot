@@ -12,7 +12,7 @@ from states import Download_type
 from utils.amo import get_amo_payments_data
 
 
-@dp.message_handler(text='Финансы', state=[None, Download_type.contact_info, Download_type.finance_info])
+@dp.message_handler(text='Финансы', state=[Download_type.begin, Download_type.contact_info, Download_type.finance_info])
 async def choise_filials(message: types.Message, state: FSMContext):
     await Download_type.finance_info.set()
     await message.answer(text='Выберите филиал или сразу оба:', reply_markup=filials)
